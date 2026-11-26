@@ -41,3 +41,6 @@ The wheel center and primary CTA open a native entry dialog on the first real dr
 
 ### Widget UX v2
 The SDK supports pill, icon and side-tab launchers via `data-launcher`; desktop uses a compact modal and mobile a bottom sheet. Auto popups appear once per browser tab session when sessionStorage is available; the launcher remains accessible after dismissal. Demo uses the same SDK and ignores the production frequency cap. Existing snippets remain compatible. Closed popup frames are refreshed when their token approaches expiry; inline frames still require reload after token expiry.
+
+### Player export and SEO
+Campaign owners can export up to 50,000 play rows per XLSX, including phone stored as a text cell, result, voucher, GMT+7 time and widget source. Export uses owner authorization, paginates by play ID and never caches the workbook. The landing page has canonical, Open Graph and Twitter metadata; each campaign share image includes its own title. Indexing remains controlled by search engines.

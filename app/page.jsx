@@ -2,8 +2,9 @@ import Link from 'next/link';
 import {Gift,ArrowRight,ArrowUpRight,Ticket,LayoutDashboard,Globe,ShieldCheck,CheckCircle2,MousePointer2,CalendarDays,Code2,ChartNoAxesColumn,ChevronRight,SlidersHorizontal,MonitorSmartphone} from 'lucide-react';
 import LandingDemo from './landing-demo';
 import './landing.css';
+import {siteOrigin,homeSeo} from '../lib/campaign-seo';
 
-export const metadata={title:'LuckyDraw — Nền tảng tạo vòng quay may mắn',description:'Tạo minigame marketing cho thương hiệu. Quản lý chiến dịch, quà tặng, voucher và nhúng vào website mà không cần lập trình.'};
+export async function generateMetadata(){return homeSeo(siteOrigin())}
 const signup='/admin?mode=signup';
 function Brand(){return <Link href="/" className="lp-brand"><span className="lp-mark"><Gift size={21} strokeWidth={1.8}/></span><span>LuckyDraw<span className="lp-brand-dot">.</span></span></Link>}
 function AdminPreview(){return <div className="lp-admin-preview" aria-label="Minh họa giao diện quản trị với dữ liệu mẫu"><div className="lp-app-top"><span><Gift size={15}/> LuckyDraw</span><span>Minh họa</span></div><div className="lp-app-body"><aside aria-hidden="true"><span className="lp-app-selected"><LayoutDashboard/> Tổng quan</span><span><Gift/> Quà tặng</span><span><Ticket/> Voucher</span><span><Code2/> Widget</span></aside><div className="lp-app-main"><div className="lp-app-kicker">CHIẾN DỊCH MẪU</div><strong>Vòng quay tri ân</strong><div className="lp-app-metrics"><div><small>Lượt quay</small><b>1.248</b></div><div><small>Quà còn lại</small><b>86</b></div></div><div className="lp-app-chart"><small>Lượt tham gia</small><div className="lp-bars">{[32,51,42,78,58,91,73,96,65,83,92,72].map((h,i)=><i key={i} style={{height:h+'%'}}/>)}</div></div><div className="lp-app-row"><Gift size={15}/><span>Voucher mua hàng</span><b>40%</b></div><div className="lp-app-row"><Ticket size={15}/><span>Mã giảm giá</span><b>20%</b></div></div></div></div>}

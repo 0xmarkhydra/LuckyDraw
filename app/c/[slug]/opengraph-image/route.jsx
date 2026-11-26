@@ -1,6 +1,5 @@
-import {ImageResponse} from 'next/og';
+import {db} from '../../../../lib/db';
+import {shareImage} from '../../../../lib/share-image';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
-export async function GET(){
- return new ImageResponse(<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:'#8e2940',color:'#fff6df',padding:60}}><div style={{display:'flex',flexDirection:'column',gap:24,flex:1}}><div style={{fontSize:38,color:'#f3e3b3'}}>LuckyDraw.</div><div style={{fontSize:78,fontWeight:700,lineHeight:1.08}}>LUCKY DRAW</div><div style={{fontSize:30,color:'#f3e3b3'}}>MINIGAME · REWARDS</div></div><svg width="420" height="420" viewBox="0 0 420 420"><circle cx="210" cy="210" r="202" fill="#772037" stroke="#e9c780" strokeWidth="8"/><path d="M210 210 L210 25 A185 185 0 0 1 370.2 302.5 Z" fill="#f3e3b3"/><path d="M210 210 L370.2 302.5 A185 185 0 0 1 49.8 302.5 Z" fill="#a62b40"/><path d="M210 210 L49.8 302.5 A185 185 0 0 1 210 25 Z" fill="#be4651"/><circle cx="210" cy="210" r="41" fill="#f3e3b3" stroke="#e9c780" strokeWidth="6"/><path d="M194 8 L226 8 L210 49 Z" fill="#f3e3b3" stroke="white" strokeWidth="2"/></svg></div>,{width:1200,height:630});
-}
+export async function GET(req,{params}){const {slug}=await params;if(!/^[a-z0-9][a-z0-9-]{0,78}[a-z0-9]$/.test(slug))return new Response(null,{status:404});const {data,error}=await db().from('settings').select('title').eq('slug',slug).maybeSingle();if(error)return new Response(null,{status:503});if(!data)return new Response(null,{status:404});return shareImage(data.title.slice(0,95),'VÒNG QUAY MAY MẮN')}
