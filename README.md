@@ -35,3 +35,6 @@ Admin widget settings display the actual SDK on a same-origin sample website for
 
 ### Campaign publishing and SEO
 Published campaigns expose server-rendered content, per-campaign title/description, canonical URL, Open Graph and Twitter metadata, a branded share image and sitemap entries. Draft/paused/ended campaigns are noindex; admin/embed/demo pages use X-Robots-Tag. Set APP_PUBLIC_URL to the preferred HTTPS canonical origin (Railway public domain is the fallback). Publishing displays a share dialog and a persistent share panel. Search engine indexing and social cache refresh are controlled by external platforms.
+
+### Play-first UX
+The wheel center and primary CTA open a native entry dialog on the first real draw. Successful server response closes the sheet and starts animation; errors stay visible for retry. Additional allowed plays reuse the entered identity without a new form. Demo still operates locally, and prize details are expandable. Optional sound defaults off.
