@@ -1,8 +1,8 @@
 'use client';
 import {useState} from 'react';
 import {Monitor,Smartphone,RotateCw,ArrowUpRight,Info} from 'lucide-react';
-export default function WidgetPreview({slug,mode,position,delay}){
+export default function WidgetPreview({slug,mode,position,delay,launcher='pill'}){
  const [device,setDevice]=useState('desktop'),[version,setVersion]=useState(0);
- const url='/widget-demo/'+encodeURIComponent(slug)+'?'+new URLSearchParams({mode,position,delay:String(delay),v:String(version)});
+ const url='/widget-demo/'+encodeURIComponent(slug)+'?'+new URLSearchParams({mode,position,launcher,delay:String(delay),v:String(version)});
  return <section className="aw-widget-preview"><div className="aw-widget-preview-head"><div><strong>Xem thử trên website</strong><small>{mode==='floating'?'Bấm nút Nhận quà ngay ở góc màn hình.':mode==='popup'?'Popup tự mở sau '+delay+' giây.':'Vòng quay xuất hiện ngay trong nội dung website.'}</small></div><div className="aw-widget-preview-controls"><button type="button" aria-label="Máy tính" title="Máy tính" aria-pressed={device==='desktop'} onClick={()=>setDevice('desktop')}><Monitor size={18}/></button><button type="button" aria-label="Điện thoại" title="Điện thoại" aria-pressed={device==='mobile'} onClick={()=>setDevice('mobile')}><Smartphone size={18}/></button><button type="button" aria-label="Chạy lại demo" title="Chạy lại demo" onClick={()=>setVersion(n=>n+1)}><RotateCw size={17}/></button><a href={url} target="_blank" rel="noreferrer" aria-label="Mở demo toàn màn hình" title="Mở demo toàn màn hình"><ArrowUpRight size={19}/></a></div></div><div className="aw-widget-preview-stage"><iframe key={url+device} src={url} title="Website mẫu có widget LuckyDraw" className={device==='mobile'?'is-mobile':''}/></div><p><Info size={15}/> Đây là website mẫu. Quay thử không ghi lượt chơi, không trừ kho quà, không ghi thống kê.</p></section>
 }

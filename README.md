@@ -38,3 +38,6 @@ Published campaigns expose server-rendered content, per-campaign title/descripti
 
 ### Play-first UX
 The wheel center and primary CTA open a native entry dialog on the first real draw. Successful server response closes the sheet and starts animation; errors stay visible for retry. Additional allowed plays reuse the entered identity without a new form. Demo still operates locally, and prize details are expandable. Optional sound defaults off.
+
+### Widget UX v2
+The SDK supports pill, icon and side-tab launchers via `data-launcher`; desktop uses a compact modal and mobile a bottom sheet. Auto popups appear once per browser tab session when sessionStorage is available; the launcher remains accessible after dismissal. Demo uses the same SDK and ignores the production frequency cap. Existing snippets remain compatible. Closed popup frames are refreshed when their token approaches expiry; inline frames still require reload after token expiry.
