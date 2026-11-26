@@ -1,7 +1,7 @@
 # LuckyDraw
-Next.js + Supabase. Nhiều chiến dịch độc lập, giới hạn lượt theo SĐT, không OTP. / là chiến dịch mặc định; /c/<slug> là trang chiến dịch mới.
-1. Tạo Supabase project riêng. Chạy `supabase/schema.sql` rồi `supabase/auto_odds_v2.sql` `supabase/auto_odds_v3.sql` `supabase/campaigns_v4.sql`  `supabase/campaigns_v5.sql` và `supabase/widgets_v6.sql` một lần theo thứ tự.
-2. Tắt public signup. Seed admin bằng `node seed-admin.mjs` trong môi trường có cấu hình Supabase; đăng nhập username admin. Script chỉ tạo tài khoản mới, không ghi đè tài khoản hiện có; mật khẩu khởi tạo chỉ hiển thị một lần. Đổi mật khẩu trong Supabase Dashboard sau khi nhận.
+Next.js + Supabase. Tài khoản tự đăng ký bằng email xác minh; mỗi tài khoản sở hữu các chiến dịch riêng. Nhiều chiến dịch độc lập, giới hạn lượt theo SĐT, không OTP. / là trang giới thiệu; /admin là quản trị; /c/<slug> là trang chiến dịch (chiến dịch cũ /c/mac-dinh).
+1. Tạo Supabase project riêng. Chạy `supabase/schema.sql` rồi `supabase/auto_odds_v2.sql` `supabase/auto_odds_v3.sql` `supabase/campaigns_v4.sql`  `supabase/campaigns_v5.sql` `supabase/widgets_v6.sql` và `supabase/owners_v7.sql` một lần theo thứ tự.
+2. Bật đăng ký email và xác minh email; cấu hình SMTP, Site URL và redirect URL production. Seed admin bằng `node seed-admin.mjs` trong môi trường có cấu hình Supabase; đăng nhập username admin. Script chỉ tạo tài khoản mới, không ghi đè tài khoản hiện có; mật khẩu khởi tạo chỉ hiển thị một lần. Đổi mật khẩu trong Supabase Dashboard sau khi nhận.
 3. Copy .env.example thành .env.local. Điền URL, publishable key và secret key server-only.
 4. npm install; npm run dev. Trang / và /admin.
 5. Tạo giải, nhập voucher CSV/TXT một mã mỗi dòng, bật chương trình.
