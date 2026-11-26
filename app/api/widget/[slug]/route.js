@@ -1,0 +1,10 @@
+import {NextResponse} from 'next/server';
+import {db} from '../../../../lib/db';
+import {normalizeOrigin,widgetConfig,widgetActive,issueWidgetToken,verifyWidgetToken} from '../../../../lib/widget';
+export const dynamic='force-dynamic';
+function headers(origin){return {'Cache-Control':'no-store','Vary':'Origin',...(origin?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type','Access-Control-Max-Age':'300'}:{})}}
+function reply(body,status=200,origin=null){return NextResponse.json(body,{status,headers:headers(origin)})}
+async function context(req,params){const {slug}=await params;const raw=req.headers.get('origin')||new URL(req.url).origin,origin=normalizeOrigin(raw),cfg=await widgetConfig(slug);return {slug,origin,cfg,allowed:!!(origin&&cfg?.widget_enabled&&cfg.widget_origins.includes(origin))}}
+export async function OPTIONS(req,{params}){try{const {origin,allowed}=await context(req,params);return new NextResponse(null,{status:allowed?204:403,headers:headers(allowed?origin:null)})}catch{return new NextResponse(null,{status:503,headers:headers(null)})}}
+export async function GET(req,{params}){try{const {slug,origin,cfg,allowed}=await context(req,params);if(!allowed)return reply({active:false},403);const active=await widgetActive(cfg);return reply({active,title:cfg.title,token:active?issueWidgetToken(slug,origin):null},200,origin)}catch{return reply({active:false},503)}}
+export async function POST(req,{params}){try{const {slug,origin,cfg,allowed}=await context(req,params);if(!allowed)return reply({ok:false},403);const b=await req.json(),p=verifyWidgetToken(b.token,slug);if(!p||p.origin!==origin||!['impression','open'].includes(b.event))return reply({ok:false},400,origin);const {error}=await db().rpc('widget_event',{p_campaign:cfg.id,p_instance:p.instance,p_origin:origin,p_event:b.event});return reply({ok:!error},error?503:200,origin)}catch{return reply({ok:false},503)}}
