@@ -1,4 +1,4 @@
 import Home from '../../game-client';
-import {widgetConfig,verifyWidgetToken} from '../../../lib/widget';
+import {widgetConfig,verifyWidgetToken,widgetOriginAllowed} from '../../../lib/widget';
 export const dynamic='force-dynamic';
-export default async function EmbedPage({params,searchParams}){const {slug}=await params,{token}=await searchParams;let cfg=null;try{cfg=await widgetConfig(slug)}catch{}const auth=token?verifyWidgetToken(token,slug):null;if(!cfg?.widget_enabled||(token&&(!auth||!cfg.widget_origins.includes(auth.origin))))return <main className="widget-unavailable"><h2>Minigame chưa khả dụng</h2><p>Vui lòng kiểm tra cấu hình Widget của chiến dịch.</p></main>;return <Home key={slug} campaignSlug={slug} embedded widgetToken={auth?token:null} parentOrigin={auth?.origin||null}/>}
+export default async function EmbedPage({params,searchParams}){const {slug}=await params,{token}=await searchParams;let cfg=null;try{cfg=await widgetConfig(slug)}catch{}const auth=token?verifyWidgetToken(token,slug):null;if(!cfg?.widget_enabled||(token&&(!auth||!widgetOriginAllowed(cfg,auth.origin))))return <main className="widget-unavailable"><h2>Minigame chưa khả dụng</h2><p>Vui lòng kiểm tra cấu hình Widget của chiến dịch.</p></main>;return <Home key={slug} campaignSlug={slug} embedded widgetToken={auth?token:null} parentOrigin={auth?.origin||null}/>}

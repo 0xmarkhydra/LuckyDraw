@@ -26,3 +26,6 @@ Apply `supabase/draw_limits_v11.sql`. Draw requests use Railway edge X-Real-IP (
 
 ### Canonical player phone (v12)
 Apply `supabase/phones_v12.sql` before deploying the app. Accept 0, 84 and +84 prefixes and persist only +84 followed by nine mobile digits. Existing valid records are converted in place; request IDs and prize history are preserved. Legacy recovery and short-lived quota hash keys remain compatible. No OTP or Turnstile.
+
+### Widget unrestricted mode (v13)
+Apply `supabase/widget_open_v13.sql`. An enabled widget with an empty allowlist can be embedded on any HTTPS website (or local HTTP for development). `*` in admin is normalized to an empty list. A nonempty allowlist remains restrictive. CORS reflects only a valid origin; only the embed route relaxes frame ancestors. Existing draw limits and stock protection remain in place.
