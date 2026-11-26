@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {initialOdds,updateOdds,equalOdds,totalOdds,sameOdds,previewIndex} from '../lib/odds.js';
+const prizes=[{id:'a',effective_quantity:4,probability:25.12},{id:'b',unlimited:true,probability:14.88},{id:'c',effective_quantity:0,probability:0}];
+test('legacy allocation is preserved in basis points',()=>assert.deepEqual(initialOdds({prizes,settings:{manual_odds:null}}),{a:2512,b:1488,c:0}));
+test('new prize starts at zero, saved odds retained',()=>assert.deepEqual(initialOdds({prizes,settings:{manual_odds:{a:2000,b:3000}}}),{a:2000,b:3000,c:0}));
+test('one reward cannot exceed remaining budget',()=>assert.deepEqual(updateOdds({a:1000,b:6500,c:500},'a',9000),{a:3000,b:6500,c:500}));
+test('negative values clamp and fractions round to basis points',()=>{assert.equal(updateOdds({a:100},'a',-10).a,0);assert.equal(updateOdds({a:100},'a',101.8).a,102)});
+test('equal allocation preserves total including rounding remainder',()=>{const p=[...prizes,{id:'d',unlimited:true}];const result=equalOdds(p,5000);assert.deepEqual(result,{a:1667,b:1667,c:0,d:1666});assert.equal(totalOdds(result),5000)});
+test('no eligible reward or reset produces zero',()=>{assert.deepEqual(equalOdds([prizes[2]],10000),{c:0});assert.deepEqual(equalOdds(prizes,0),{a:0,b:0,c:0})});
+test('undo and equality detect exact changes',()=>{assert(sameOdds({a:0,b:2},{b:2,a:0}));assert(!sameOdds({a:0,b:2},{a:0,b:3}));assert(!sameOdds({a:0},{a:0,b:0}))});
+test('demo uses saved prize odds and no-win remainder',()=>{const p=[{id:'a',probability:25},{id:'b',probability:0},{id:'c',probability:15},{id:'none'}];assert.equal(previewIndex(p,0.249),0);assert.equal(previewIndex(p,0.25),2);assert.equal(previewIndex(p,0.4),3);assert.equal(previewIndex([{id:'a',probability:0},{id:'none'}],0),1);assert.equal(previewIndex([{id:'a',probability:100},{id:'none'}],0.9999),0)});

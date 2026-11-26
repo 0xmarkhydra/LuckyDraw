@@ -11,7 +11,8 @@
     "icons:generate": "node scripts/generate-icons.mjs",
     "icons:check": "node scripts/generate-icons.mjs --check",
     "prebuild": "npm run icons:check",
-    "test:signup-origin": "node scripts/test-signup-origin.mjs"
+    "test:signup-origin": "node scripts/test-signup-origin.mjs",
+    "test:odds": "node --test scripts/test-odds.mjs"
   },
   "keywords": [],
   "author": "",
