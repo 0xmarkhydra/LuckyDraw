@@ -17,3 +17,6 @@ Registration origin validation supports Railway TLS termination through `RAILWAY
 
 ### Reward editor (v9)
 Apply `supabase/rewards_v9.sql` after previous migrations. New unique-code rewards derive their quantity from the number of distinct codes. Existing rewards retain their configured remaining quantity unless explicitly edited. Reward and voucher changes are atomic; codes already assigned to a different reward reject the entire save. Only the server role can call the RPC. Legacy endpoints remain for compatibility.
+
+### Manual probability (v10)
+Apply `supabase/odds_v10.sql`. New campaigns start with zero configured prize probability; owners save odds in Rewards (basis points, total <=10000). Existing campaigns retain legacy auto allocation until custom odds are saved. Exhausted rewards' odds go to no-win; other configured odds do not change. No exact winning counts are promised.
