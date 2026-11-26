@@ -10,7 +10,8 @@
     "start": "next start",
     "icons:generate": "node scripts/generate-icons.mjs",
     "icons:check": "node scripts/generate-icons.mjs --check",
-    "prebuild": "npm run icons:check"
+    "prebuild": "npm run icons:check",
+    "test:signup-origin": "node scripts/test-signup-origin.mjs"
   },
   "keywords": [],
   "author": "",

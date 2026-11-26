@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {signupOriginAllowed} from '../lib/signup-origin.js';
+const publicOrigin='https://web-production-0c0e9892.up.railway.app';
+const env={RAILWAY_PUBLIC_DOMAIN:new URL(publicOrigin).hostname,APP_PUBLIC_ORIGINS:'https://example.com'};
+const request=(url,origin,extra={})=>new Request(url,{method:'POST',headers:{...(origin===null?{}:{origin}),...extra}});
+const internal='http://localhost:8080/api/auth/register';
+assert.equal(signupOriginAllowed(request(internal,publicOrigin,{'sec-fetch-site':'same-origin'}),env),true);
+assert.equal(signupOriginAllowed(request(internal,publicOrigin),env),true);
+assert.equal(signupOriginAllowed(request(internal,'https://example.com'),env),true);
+assert.equal(signupOriginAllowed(request(internal,'https://evil.example',{'x-forwarded-host':'evil.example','x-forwarded-proto':'https'}),env),false);
+assert.equal(signupOriginAllowed(request(internal,publicOrigin,{'sec-fetch-site':'cross-site'}),env),false);
+assert.equal(signupOriginAllowed(request(internal,null),env),false);
+assert.equal(signupOriginAllowed(request(internal,'null'),env),false);
+assert.equal(signupOriginAllowed(request('http://localhost:3199/api/auth/register','http://localhost:3199'),{}),true);
+assert.equal(signupOriginAllowed(request(internal,'http://'+new URL(publicOrigin).hostname),env),false);
+assert.equal(signupOriginAllowed(request('http://'+new URL(publicOrigin).hostname+'/api/auth/register',publicOrigin),env),true);
+console.log('PASS: Railway proxy, custom domain, loopback, cross-site and forged forwarded header rejection');
