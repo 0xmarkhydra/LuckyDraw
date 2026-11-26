@@ -14,3 +14,6 @@ Trong Admin chọn chiến dịch → Widget & tích hợp → bật widget, lư
 All UI icons use the pinned `lucide-react` package. Run `npm run icons:generate` after changes to the Widget icon set; `npm run icons:check` verifies generated SVGs. Widget assets are bundled at build time, with no runtime CDN. The wheel geometry and confetti are game graphics, not UI icons.
 
 Registration origin validation supports Railway TLS termination through `RAILWAY_PUBLIC_DOMAIN`; configure `APP_PUBLIC_ORIGINS` (comma-separated HTTPS origins) for custom domains. Run `npm run test:signup-origin`.
+
+### Reward editor (v9)
+Apply `supabase/rewards_v9.sql` after previous migrations. New unique-code rewards derive their quantity from the number of distinct codes. Existing rewards retain their configured remaining quantity unless explicitly edited. Reward and voucher changes are atomic; codes already assigned to a different reward reject the entire save. Only the server role can call the RPC. Legacy endpoints remain for compatibility.
