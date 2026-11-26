@@ -1,0 +1,72 @@
+/* LuckyDraw iOS-inspired workspace. Scoped to administration only.
+   Semantic tokens: neutral solid surfaces; restrained glass on chrome. */
+.aw-shell,.aw-login{
+ --primary:#ae2941;--primary-hover:#942238;--primary-soft:#f8e9ed;--surface:#fff;--surface-soft:#f5f4f6;--text:#242127;--muted:#69656e;--border:#e5e2e6;--focus:#a32b43;--glass:rgba(250,249,250,.88);--shadow:0 2px 10px #29222c05;--float:0 18px 60px #2b21341a;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);font-size:15px;letter-spacing:-.1px;
+}
+.aw-shell{background:#f2f1f4;grid-template-columns:246px minmax(0,1fr)}
+.aw-shell .aw-sidebar{background:#f9f8fa;color:var(--text);border-right:1px solid #e1dfe4;padding:20px 12px 14px;gap:18px}
+.aw-shell .aw-brand{padding:4px 9px 7px;gap:11px}
+.aw-shell .aw-mark,.aw-login .aw-mark{width:40px;height:40px;border-radius:13px;background:var(--primary);box-shadow:0 3px 9px #ae29411c}
+.aw-shell .aw-brand strong{color:var(--text);font-size:19px;letter-spacing:-.65px}
+.aw-shell .aw-brand small,.aw-shell .aw-project small{color:var(--muted);font-size:11px}
+.aw-shell .aw-project{padding:10px;background:#fff;border:1px solid var(--border);border-radius:13px;gap:9px}
+.aw-shell .aw-project>div{flex:1;min-width:0}
+.aw-shell .aw-project-icon{width:36px;height:36px;border-radius:10px;color:var(--primary);background:var(--primary-soft)}
+.aw-project select{width:100%;min-height:32px;font-size:13px;font-weight:700;border:0;background:transparent;padding:3px 4px 3px 0;color:var(--text);border-radius:6px;text-overflow:ellipsis}
+.aw-shell .aw-sidebar nav{gap:18px}
+.aw-shell .aw-nav-group{gap:3px}
+.aw-shell .aw-sidebar .aw-nav-caption{font-size:10px;font-weight:700;letter-spacing:.65px;color:#77717c;padding:6px 11px}
+.aw-shell .aw-sidebar .aw-nav{color:#49454e;min-height:44px;border-radius:11px;font-size:13px;font-weight:550;gap:10px!important;padding:10px 11px}
+.aw-shell .aw-sidebar .aw-nav svg:first-child{color:#77717b;flex-shrink:0}
+.aw-shell .aw-sidebar .aw-nav.selected{background:#f4e4e9;color:#92243b;font-weight:700}
+.aw-shell .aw-sidebar .aw-nav.selected svg{color:#92243b}
+.aw-shell .aw-sidebar .aw-nav:hover:not(:disabled){background:#edecef;color:#312d36}
+.aw-shell .aw-sidebar .aw-nav.selected:hover{background:#f0dce3;color:#92243b}
+.aw-shell .aw-sidebar .aw-mobile-close{color:var(--muted)}
+.aw-side-bottom{border-top:1px solid var(--border);padding-top:10px;gap:4px}
+.aw-home-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 11px;font-size:13px;color:#49454e;border-radius:11px}
+.aw-home-link:hover{background:#edecef;text-decoration:none}
+.aw-shell .aw-topbar{min-height:66px;background:var(--glass);backdrop-filter:blur(20px) saturate(130%);border-bottom:1px solid #e4e0e5;padding:10px 28px;box-shadow:none}
+.aw-shell .aw-breadcrumb{font-size:13px;gap:8px}
+.aw-shell .aw-profile{background:#f0e8eb;color:#9d2940;width:36px;height:36px}
+.aw-shell .aw-secondary-link{background:#fff;border-radius:11px;font-size:13px;min-height:42px;padding:9px 13px}
+.aw-shell .aw-content{max-width:1380px;padding:28px 30px 48px;gap:20px}
+.aw-shell .aw-page-head{min-height:74px;align-items:center;gap:16px}
+.aw-shell .aw-page-head .aw-eyebrow{font-size:11px;font-weight:650;color:var(--muted);letter-spacing:.15px;overflow-wrap:anywhere}
+.aw-shell .aw-page-head h1{font-size:34px;font-weight:760;line-height:1.18;letter-spacing:-1.2px;margin:4px 0}
+.aw-shell .aw-page-head p{font-size:14px;line-height:1.5}
+.aw-shell .aw-panel,.aw-shell .aw-metric{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+.aw-shell .aw-panel{padding:22px;gap:18px}
+.aw-shell .aw-section-head h2{font-size:17px;font-weight:710;letter-spacing:-.35px}
+.aw-shell .aw-section-head p{font-size:13px;line-height:1.55}
+.aw-shell button,.aw-login button{border-radius:12px;min-height:44px;font-size:14px;letter-spacing:-.1px}
+.aw-shell button.secondary,.aw-login button.secondary{background:#f1eff2;color:#413d46;border:1px solid #e3e0e5}
+.aw-shell button.secondary:hover:not(:disabled),.aw-login button.secondary:hover:not(:disabled){background:#e8e5ea}
+.aw-shell button:disabled,.aw-login button:disabled{opacity:.58;cursor:not-allowed}
+.aw-shell .aw-launch-card{background:#fff;border:1px solid var(--border);border-radius:19px;padding:24px 26px;position:relative;overflow:hidden}
+.aw-launch-kicker{color:#a32940;letter-spacing:.85px}
+.aw-launch-card h2{font-size:26px;letter-spacing:-.65px;margin:7px 0}
+.aw-launch-card p{font-size:14px}
+.aw-launch-art{width:124px;height:124px;background:#f7e8ec;border:0;border-radius:28px}
+.aw-mini-wheel{width:89px;height:89px;border:5px solid #c9a165;box-shadow:0 3px 12px #42263015;border-radius:50%;background:conic-gradient(#f4e3bc 0 45deg,#a9394d 45deg 90deg,#f4e3bc 90deg 135deg,#a9394d 135deg 180deg,#f4e3bc 180deg 225deg,#a9394d 225deg 270deg,#f4e3bc 270deg 315deg,#a9394d 315deg);display:grid;place-items:center;color:#9d2940}
+.aw-mini-wheel svg{background:#fff6e4;border-radius:50%;padding:6px;width:40px;height:40px}
+.aw-metrics{gap:14px}.aw-shell .aw-metric{padding:19px;gap:8px}.aw-metric>div{font-size:13px;color:var(--muted);font-weight:550}.aw-metric>strong{font-size:32px;letter-spacing:-1.2px}.aw-metric>small{font-size:12px}.aw-metric-icon{background:#f4e7eb;color:#a12c44;width:37px;height:37px;border-radius:11px}.aw-metric-icon.green{background:#e9f3ed;color:#28734b}.aw-metric-icon.purple{background:#f4eee5;color:#89622d}
+.aw-shell .aw-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid var(--border);border-radius:13px;overflow:hidden;background:#fff}
+.aw-shell .aw-quick{border:0;border-bottom:1px solid var(--border);border-radius:0;background:#fff;color:var(--primary);padding:14px;min-height:68px}
+.aw-shell .aw-quick:nth-child(odd){border-right:1px solid var(--border)}.aw-shell .aw-quick:nth-last-child(-n+2){border-bottom:0}.aw-shell .aw-quick:hover{background:#f8f6f8}.aw-quick small{line-height:1.45}
+.aw-shell .aw-distribution{background:#f6f4f6;border-radius:13px;padding:16px}.aw-bar,.aw-prob>span{background:#e9e5e9}.aw-shell .aw-breakdown>div{padding:12px 0;font-size:13px}
+.aw-shell .aw-table{border-radius:12px;border-color:var(--border)}.aw-shell .aw-table th{background:#f7f6f8;color:#716a76;font-size:12px;font-weight:650}.aw-shell .aw-table td,.aw-shell .aw-table th{padding:13px 14px}.aw-shell .aw-table tbody tr:hover{background:#faf8fa}.aw-shell .aw-person strong{font-size:14px}.aw-shell .aw-person small{font-size:12px}
+.aw-shell .aw-pill,.aw-neutral-pill,.aw-result{border-radius:999px;font-size:12px}.aw-shell .aw-pill{padding:6px 10px;background:#f2f0f3;border-color:transparent;color:#625c67}.aw-shell .aw-pill.is-live{background:#e7f3e9;color:#247043}.aw-shell .aw-pill.is-live i{background:#378b57}
+.aw-shell .aw-campaign-list{gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden}.aw-shell .aw-campaign-list article{border:0;border-bottom:1px solid var(--border);border-radius:0;padding:15px;gap:12px;background:#fff}.aw-shell .aw-campaign-list article:last-child{border-bottom:0}.aw-shell .aw-campaign-list article.current{background:#faf7f9}.aw-shell .aw-campaign-list article>div>strong{font-size:15px;overflow-wrap:anywhere}.aw-shell .aw-campaign-icon{background:#f6e8ed;color:#a32940;border-radius:12px;width:44px;height:44px}.aw-external{display:grid;place-items:center}
+.aw-shell .aw-form{gap:20px}.aw-shell .aw-form label,.aw-login label{font-size:14px;font-weight:650;gap:7px}.aw-shell input:not([type=checkbox]),.aw-shell select:not(.aw-project select),.aw-shell textarea,.aw-login input{background:#f6f5f7;border:1px solid #e4e1e6;border-radius:12px;min-height:48px;font-size:16px;color:var(--text)}.aw-shell input:focus,.aw-shell select:focus,.aw-shell textarea:focus,.aw-login input:focus{border-color:var(--focus);background:#fff}.aw-shell .aw-filter input{padding-left:40px}.aw-shell .aw-form input[type=checkbox]{accent-color:var(--primary)}
+.aw-shell .aw-hint,.aw-shell .aw-advanced{background:#f6f5f7;border-radius:12px;color:var(--muted);font-size:13px;line-height:1.6}.aw-shell .aw-empty{padding:32px 12px;gap:9px}.aw-shell .aw-empty>span{background:#f4e7eb;color:#a32b43;border-radius:16px}.aw-shell .aw-empty strong{font-size:15px}.aw-shell .aw-empty p{font-size:13px}
+.aw-shell .aw-upload{border-color:#c9bec7;background:#f8f6f8}.aw-shell .aw-widget-mode{border-radius:14px;background:#f6f5f7;color:var(--text);padding:14px}.aw-shell .aw-widget-mode.selected{background:#f8e9ed;border-color:#ce9aaa;color:#92243b}
+.aw-shell .aw-editor{background:#fff;color:var(--text);border-radius:24px;max-height:calc(100dvh - 24px);overflow:auto;box-shadow:var(--float);padding:24px}.aw-shell .overlay{background:#26212e66;backdrop-filter:blur(12px)}.aw-shell .aw-editor .close-button{color:#69656e;background:#f1eff2;border-radius:50%}
+.aw-shell .aw-wizard{border:0;background:transparent;box-shadow:none;padding:0}.aw-focus-mode{background:#f2f1f4}.aw-focus-mode .aw-content{max-width:1000px;gap:20px}.aw-focus-mode .aw-stepper{gap:0}.aw-shell .aw-step{color:#6a6370}.aw-step.current>span{background:var(--primary)}.aw-focus-mode .aw-wizard-footer{background:rgba(242,241,244,.93);border-color:var(--border);backdrop-filter:blur(16px)}.aw-shell .aw-step-title h1{font-size:32px;font-weight:760;letter-spacing:-1px}.aw-shell .aw-step-tabs{gap:8px}
+.aw-login{max-width:1120px;gap:clamp(28px,6vw,84px)}.aw-login .aw-login-card{border-radius:24px;padding:32px;box-shadow:0 8px 40px #31253809}.aw-login .aw-login-visual h2{font-size:clamp(32px,4vw,54px);font-weight:760;line-height:1.13;letter-spacing:-1.6px}.aw-login .aw-login-features span{border-radius:12px;color:var(--muted)}body:has(.aw-login){background:#f2f1f4}.aw-login .aw-login-card h1{font-size:30px}.aw-first-campaign{max-width:620px}
+@media(max-width:1100px){.aw-shell{grid-template-columns:218px minmax(0,1fr)}.aw-shell .aw-content{padding:22px 22px 36px}.aw-shell .aw-overview-grid{grid-template-columns:1fr}}
+@media(max-width:780px){.aw-shell{display:block}.aw-shell .aw-sidebar{width:min(300px,86vw);background:#f9f8fa}.aw-shell .aw-topbar{padding:8px 12px;min-height:60px}.aw-shell .aw-content{padding:18px 14px 32px;gap:14px}.aw-shell .aw-page-head{flex-wrap:wrap;align-items:flex-start;min-height:0;gap:10px}.aw-shell .aw-page-head h1{font-size:29px}.aw-shell .aw-page-head>button{max-width:none}.aw-shell .aw-page-head p{font-size:13px}.aw-shell .aw-panel{padding:16px;border-radius:16px;gap:14px}.aw-shell .aw-launch-card{padding:18px!important}.aw-launch-art{width:76px;height:76px;border-radius:19px}.aw-mini-wheel{width:57px;height:57px;border-width:3px}.aw-mini-wheel svg{width:27px;height:27px}.aw-launch-card h2{font-size:22px}.aw-shell .aw-metric{padding:14px}.aw-metric>strong{font-size:27px}.aw-shell .aw-quick-grid{grid-template-columns:1fr}.aw-shell .aw-quick:nth-child(odd){border-right:0}.aw-shell .aw-quick:nth-last-child(2){border-bottom:1px solid var(--border)}.aw-shell .aw-campaign-list article{padding:12px;gap:8px}.aw-shell .aw-campaign-list article>div{min-width:110px}.aw-shell .aw-campaign-list article .aw-external{display:none}.aw-shell .aw-campaign-list article>button{margin-left:auto}.aw-shell .aw-step-title h1{font-size:28px}.aw-focus-mode .aw-wizard{padding:0}.aw-focus-mode .aw-content{padding:18px 14px 32px}.aw-login .aw-login-card{padding:24px}.aw-login .aw-login-visual h2{font-size:31px}}
+@media(max-width:365px){.aw-shell .aw-metrics{grid-template-columns:1fr}.aw-shell .aw-metric:last-child{grid-column:auto}.aw-launch-art{display:none}}
+@media(prefers-reduced-transparency:reduce){.aw-shell .aw-topbar,.aw-focus-mode .aw-wizard-footer{background:#f9f8fa;backdrop-filter:none}.aw-shell .overlay{backdrop-filter:none}}
+@media(prefers-reduced-motion:reduce){.aw-shell *, .aw-login *{transition:none!important;animation:none!important}}
