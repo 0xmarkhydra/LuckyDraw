@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {normalizeIp,clientIp,drawQuotaHashes} from '../lib/draw-quota.js';
+assert.equal(normalizeIp('192.0.2.1'),'192.0.2.1');
+assert.equal(normalizeIp('::ffff:192.0.2.1'),'192.0.2.1');
+assert.equal(normalizeIp('2001:db8:abcd:1234:123:456:789:abc'),'2001:db8:abcd:1234::/64');
+assert.equal(normalizeIp('2001:db8:abcd:1234::ffff'),'2001:db8:abcd:1234::/64');
+assert.equal(normalizeIp('1.2.3.4, 5.6.7.8'),null);
+const env={RAILWAY_PUBLIC_DOMAIN:'example.up.railway.app',SUPABASE_SECRET_KEY:'test-only'};
+const req=new Request('https://example.up.railway.app/api/game',{headers:{'x-real-ip':'192.0.2.1','x-forwarded-for':'203.0.113.1','x-railway-edge':'edge','x-railway-request-id':'test'}});
+assert.equal(clientIp(req,env),'192.0.2.1');
+assert.equal(clientIp(new Request(req.url,{headers:{'x-forwarded-for':'192.0.2.1'}}),env),null);
+const a=drawQuotaHashes(req,1,'0900000001','77a3b495-cfae-4d6f-ad67-d8c7db5999d2',env);
+assert.equal(a.p_ip_hash.length,64);assert.equal(a.p_device_hash.length,64);assert.notEqual(a.p_phone_hash,drawQuotaHashes(req,2,'0900000001',null,env).p_phone_hash);
+console.log('PASS: IP normalization, IPv6 prefix, trusted header selection, pseudonymous buckets');

@@ -20,3 +20,6 @@ Apply `supabase/rewards_v9.sql` after previous migrations. New unique-code rewar
 
 ### Manual probability (v10)
 Apply `supabase/odds_v10.sql`. New campaigns start with zero configured prize probability; owners save odds in Rewards (basis points, total <=10000). Existing campaigns retain legacy auto allocation until custom odds are saved. Exhausted rewards' odds go to no-win; other configured odds do not change. No exact winning counts are promised.
+
+### Draw abuse protection (v11)
+Apply `supabase/draw_limits_v11.sql`. Draw requests use Railway edge X-Real-IP (IPv6 /64), HMAC-pseudonymized buckets, phone quotas and a best-effort browser UUID. Limits: global IP 180/10 min, campaign IP 60/10 min, 30 distinct phones/IP/campaign/UTC day, 3 distinct phones/browser/campaign/UTC day, 30 attempts/phone/campaign/10 min. Shared IPs are not limited to one player. Fixed windows, opportunistic expiry cleanup. Local development uses a shared development bucket. Do not expose the app directly outside trusted Railway ingress. No OTP or proof of phone ownership; browser identifiers may be cleared, and VPNs can rotate IPs. For high-value rewards, add verified phone OTP and risk-based CAPTCHA. Review privacy/retention policy before production campaigns.
