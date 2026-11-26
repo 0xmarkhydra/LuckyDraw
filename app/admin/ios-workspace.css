@@ -84,21 +84,7 @@
 .aw-shell .aw-sidebar-v2 .aw-brand strong{font-size:20px;letter-spacing:-.8px;line-height:1.18;font-weight:740}
 .aw-sidebar-v2 .aw-brand strong>span{color:var(--primary)}
 .aw-shell .aw-sidebar-v2 .aw-brand small{font-size:10px;letter-spacing:.05px;color:#77717c;margin-top:3px}
-.aw-switcher{position:relative;margin:0 0 19px;flex-shrink:0}
-.aw-shell .aw-sidebar-v2 button.aw-switcher-trigger{width:100%;display:flex;justify-content:flex-start;gap:10px;background:#fff;border:1px solid #e2dfe4;border-radius:12px;padding:10px;min-height:60px;color:#29252c;text-align:left;box-shadow:0 1px 2px #29222c04}
-.aw-shell .aw-sidebar-v2 button.aw-switcher-trigger:hover:not(:disabled),.aw-shell .aw-sidebar-v2 button.aw-switcher-trigger[aria-expanded=true]{background:#fdfbfc;border-color:#d4cbd1}
 .aw-switcher-symbol{display:grid;place-items:center;flex:none;width:34px;height:34px;background:#f4e7eb;color:#a52b43;border-radius:10px}
-.aw-switcher-copy{min-width:0;flex:1;display:grid;gap:3px}
-.aw-switcher-copy small{color:#79737d;font-size:10px;font-weight:500;white-space:nowrap}
-.aw-switcher-copy strong{font-size:13px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.aw-switcher-trigger>svg{flex:none;color:#77717c}
-.aw-switcher-menu{position:absolute;top:calc(100% + 7px);left:0;right:0;z-index:25;background:#fff;border:1px solid #e5e0e6;border-radius:13px;box-shadow:0 12px 32px #30252e22;padding:6px;overflow:hidden}
-.aw-switcher-heading{padding:8px 9px 5px;font-size:10px;color:#79737d;font-weight:650}
-.aw-switcher-options{max-height:235px;overflow:auto;overscroll-behavior:contain}
-.aw-shell .aw-switcher-menu button{display:flex;justify-content:space-between;text-align:left;width:100%;min-height:43px;padding:8px 9px;border-radius:8px;background:#fff;color:#353039;font-weight:500;font-size:13px}
-.aw-shell .aw-switcher-menu button:hover:not(:disabled),.aw-shell .aw-switcher-menu button.chosen{background:#f5edf0;color:#92243b}
-.aw-switcher-options button>span{flex:1;min-width:0;display:grid;gap:3px}.aw-switcher-options strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.aw-switcher-options small{font-size:10px;color:#77717b}
-.aw-shell .aw-switcher-menu button.aw-switcher-create{border-top:1px solid #e9e6e9;margin-top:4px;justify-content:flex-start;color:var(--primary);font-weight:650}
 .aw-shell .aw-sidebar-v2 nav.aw-sidebar-nav{display:flex;flex-direction:column;gap:17px;min-height:0;flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#ded9df transparent;padding-bottom:10px}
 .aw-shell .aw-sidebar-v2 .aw-nav-group{display:grid;gap:2px;flex-shrink:0}
 .aw-shell .aw-sidebar-v2 .aw-nav-caption{font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:#827c86;padding:0 10px 5px;line-height:1.3}
