@@ -29,3 +29,6 @@ Apply `supabase/phones_v12.sql` before deploying the app. Accept 0, 84 and +84 p
 
 ### Widget unrestricted mode (v13)
 Apply `supabase/widget_open_v13.sql`. An enabled widget with an empty allowlist can be embedded on any HTTPS website (or local HTTP for development). `*` in admin is normalized to an empty list. A nonempty allowlist remains restrictive. CORS reflects only a valid origin; only the embed route relaxes frame ancestors. Existing draw limits and stock protection remain in place.
+
+### Safe widget preview
+Admin widget settings display the actual SDK on a same-origin sample website for floating, popup and inline modes. Demo draws only simulate results in the browser, never call the draw or event POST endpoints, and do not use real customer data. Demo outcomes are illustrative, not a probability test. Full prize names remain visible below the wheel; wheels with more than five outcomes use numbered segments linked to the legend.
