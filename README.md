@@ -1,8 +1,8 @@
 # LuckyDraw
 Next.js + Supabase. Một chiến dịch, một lượt/SĐT, không OTP.
-1. Tạo Supabase project riêng. Chạy supabase/schema.sql một lần trong SQL Editor.
+1. Tạo Supabase project riêng. Chạy `supabase/schema.sql` rồi `supabase/auto_odds_v2.sql` và `supabase/auto_odds_v3.sql` một lần theo thứ tự.
 2. Tắt public signup. Seed admin bằng `node seed-admin.mjs` trong môi trường có cấu hình Supabase; đăng nhập username admin. Script chỉ tạo tài khoản mới, không ghi đè tài khoản hiện có; mật khẩu khởi tạo chỉ hiển thị một lần. Đổi mật khẩu trong Supabase Dashboard sau khi nhận.
 3. Copy .env.example thành .env.local. Điền URL, publishable key và secret key server-only.
 4. npm install; npm run dev. Trang / và /admin.
 5. Tạo giải, nhập voucher CSV/TXT một mã mỗi dòng, bật chương trình.
-Tất cả dữ liệu nằm trong Supabase. Tổng xác suất tối đa 100%. Quà hết kho/hết mã chuyển thành không trúng. SQL transaction khóa settings và phần thưởng; mã duy nhất; request UUID giúp retry an toàn trong phiên. SĐT chưa OTP nên không xác minh quyền sở hữu. Cấu hình CAPTCHA/rate limit ở hosting trước khi public; xác nhận thể lệ và thông báo dữ liệu. Không công khai secret.
+Tất cả dữ liệu nằm trong Supabase. Tổng xác suất hiển thị đúng 100%; việc chọn kết quả dùng vé trọng số nguyên và lấy mẫu loại bỏ sai lệch modulo, không dùng phần trăm làm tròn. Revision ngăn ghi đè dữ liệu cũ. Quà giới hạn có tồn khả dụng bằng số lượng còn lại, hoặc min(số lượng, số mã chưa dùng) nếu yêu cầu mã duy nhất. Mẫu số = max(1, lượt dự kiến còn lại, tổng tồn khả dụng); mỗi quà giới hạn có xác suất = tồn khả dụng / mẫu số. Phần dư chia theo trọng số quà không giới hạn và không trúng. Mốc lượt dự kiến không phải giới hạn cứng: vượt mốc thì ưu tiên tồn hữu hạn còn lại. Quà không giới hạn không yêu cầu mã duy nhất. Đóng chương trình trước khi chỉnh tồn kho hoặc nhập voucher. SQL transaction khóa settings; tồn kho, voucher, kết quả và ảnh chụp xác suất được lưu nguyên tử; request UUID hỗ trợ retry cùng phiên trình duyệt. SĐT chưa OTP nên không xác minh quyền sở hữu. Cấu hình CAPTCHA/rate limit ở hosting trước khi public; xác nhận thể lệ và thông báo dữ liệu. Không công khai secret.
