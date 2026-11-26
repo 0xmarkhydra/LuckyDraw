@@ -9,3 +9,6 @@ Tất cả dữ liệu nằm trong Supabase. Tổng xác suất hiển thị đ�
 
 ## Widget
 Trong Admin chọn chiến dịch → Widget & tích hợp → bật widget, lưu danh sách origin HTTPS (www và non-www là hai origin), chọn floating/popup/inline rồi copy code. `/embed/<slug>` hiển thị widget thật. Tất cả chế độ chia sẻ cùng game engine. Widget chỉ xuất hiện khi chiến dịch đang mở, kiểm tra lại mỗi 60 giây; đang chơi vẫn có thể xem kết quả khi đóng. Trang nhúng sử dụng CSP frame-ancestors theo allowlist; landing và admin không cho framing. HMAC nguồn được cấp qua CORS; không phải xác minh danh tính người chơi. Thống kê impression/open đếm phiên widget, không phải unique users và có thể bị bot làm nhiễu. Khi website dùng CSP, cho phép origin LuckyDraw trong script-src, connect-src, frame-src; SDK sử dụng style nội tuyến. Đặt mã inline sau container hoặc chỉ định data-target. Không cần cookie bên thứ ba.
+
+## Icon system
+All UI icons use the pinned `lucide-react` package. Run `npm run icons:generate` after changes to the Widget icon set; `npm run icons:check` verifies generated SVGs. Widget assets are bundled at build time, with no runtime CDN. The wheel geometry and confetti are game graphics, not UI icons.

@@ -16,8 +16,8 @@ function localDate(v){if(!v)return '';return new Date(new Date(v).getTime()+7*36
 function utcDate(v){return v?new Date(v+':00+07:00').toISOString():null}
 const setupSteps=[{title:'Thông tin chiến dịch',desc:'Đặt tên và thời gian tổ chức.'},{title:'Thể lệ trò chơi',desc:'Quy định số lượt tham gia và nhận thưởng.'},{title:'Chuẩn bị quà tặng',desc:'Thêm quà và nhập mã nếu cần.'},{title:'Xem giao diện',desc:'Kiểm tra trang khách hàng sẽ nhìn thấy.'},{title:'Chia sẻ & nhúng',desc:'Chọn cách đưa minigame đến khách hàng.'},{title:'Kiểm tra và công bố',desc:'Rà soát lần cuối trước khi bắt đầu.'}];
 const fmt=n=>new Intl.NumberFormat('vi-VN',{maximumFractionDigits:6}).format(n);
-function GlobeIcon(){return <ArrowUpRight size={19}/>}
-function Mark(){return <span className="aw-mark"><RotateCw size={21} strokeWidth={2.1}/></span>}
+function GlobeIcon(){return <ArrowUpRight size={19} strokeWidth={1.8} aria-hidden="true"/>}
+function Mark(){return <span className="aw-mark"><Gift size={22} strokeWidth={1.8} aria-hidden="true"/></span>}
 function Empty({icon:Icon=Info,title,detail}){return <div className="aw-empty"><span><Icon size={24} strokeWidth={1.7}/></span><strong>{title}</strong><p>{detail}</p></div>}
 function Heading({title,desc,action}){return <div className="aw-section-head"><div><h2>{title}</h2>{desc&&<p>{desc}</p>}</div>{action}</div>}
 function Status({active,starts,ends}){const now=Date.now(),label=ends&&Date.parse(ends)<=now?'Đã kết thúc':!active?'Chưa công bố':starts&&Date.parse(starts)>now?'Đã lên lịch':'Đang chạy';return <span className={'aw-pill '+(label==='Đang chạy'?'is-live':'is-off')}><i/>{label}</span>}
