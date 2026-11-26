@@ -23,3 +23,6 @@ Apply `supabase/odds_v10.sql`. New campaigns start with zero configured prize pr
 
 ### Draw abuse protection (v11)
 Apply `supabase/draw_limits_v11.sql`. Draw requests use Railway edge X-Real-IP (IPv6 /64), HMAC-pseudonymized buckets, phone quotas and a best-effort browser UUID. Limits: global IP 180/10 min, campaign IP 60/10 min, 30 distinct phones/IP/campaign/UTC day, 3 distinct phones/browser/campaign/UTC day, 30 attempts/phone/campaign/10 min. Shared IPs are not limited to one player. Fixed windows, opportunistic expiry cleanup. Local development uses a shared development bucket. Do not expose the app directly outside trusted Railway ingress. No OTP or proof of phone ownership; browser identifiers may be cleared, and VPNs can rotate IPs. For high-value rewards, add verified phone OTP and risk-based CAPTCHA. Review privacy/retention policy before production campaigns.
+
+### Canonical player phone (v12)
+Apply `supabase/phones_v12.sql` before deploying the app. Accept 0, 84 and +84 prefixes and persist only +84 followed by nine mobile digits. Existing valid records are converted in place; request IDs and prize history are preserved. Legacy recovery and short-lived quota hash keys remain compatible. No OTP or Turnstile.

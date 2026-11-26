@@ -12,3 +12,5 @@ assert.equal(clientIp(new Request(req.url,{headers:{'x-forwarded-for':'192.0.2.1
 const a=drawQuotaHashes(req,1,'0900000001','77a3b495-cfae-4d6f-ad67-d8c7db5999d2',env);
 assert.equal(a.p_ip_hash.length,64);assert.equal(a.p_device_hash.length,64);assert.notEqual(a.p_phone_hash,drawQuotaHashes(req,2,'0900000001',null,env).p_phone_hash);
 console.log('PASS: IP normalization, IPv6 prefix, trusted header selection, pseudonymous buckets');
+assert.equal(a.p_phone_hash,drawQuotaHashes(req,1,'+84900000001',null,env).p_phone_hash);
+assert.equal(a.p_phone_hash,drawQuotaHashes(req,1,'84900000001',null,env).p_phone_hash);

@@ -1,18 +1,19 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import WinCelebration from './win-celebration';
+import {normalizePhone,legacyPhoneKey} from '../lib/phone.js';
 import { Gift, Ticket, Clover, UserRound, Phone, ShieldCheck, ArrowRight, ArrowUpRight, X, RotateCw, CheckCircle2, LoaderCircle } from 'lucide-react';
 
 const colors=['#a62b40','#f3e3b3','#be4651','#f5e7c8','#8e2338','#fff7e7'];
 const defaults={title:'Vòng quay may mắn',description:'Một vòng quay, một cơ hội để mang về món quà dành riêng cho bạn.',active:false};
 const icons={gift:Gift,ticket:Ticket,neutral:Clover,user:UserRound,phone:Phone,shield:ShieldCheck,arrow:ArrowRight,external:ArrowUpRight,close:X,wheel:RotateCw,check:CheckCircle2,loading:LoaderCircle};
 function Icon({name,size=20,...props}){const C=icons[name]||Gift;return <C aria-hidden="true" size={size} strokeWidth={1.8} {...props}/>}
-function normalizePhone(v){return v.trim().replace(/[\s().-]/g,'').replace(/^(\+84|84)/,'0')}
+
 let browserDevice;
 function getDeviceId(){if(browserDevice)return browserDevice;const key='luckydraw:device:v1';try{const old=localStorage.getItem(key);if(old&&/^[a-f0-9-]{36}$/i.test(old)){browserDevice=old;return old}browserDevice=crypto.randomUUID();localStorage.setItem(key,browserDevice);return browserDevice}catch{try{browserDevice=browserDevice||crypto.randomUUID();return browserDevice}catch{return null}}}
 const storagePrefix='luckydraw:request:v2:';
 function hasStoredRequest(slug){try{return Object.keys(sessionStorage).some(key=>key.startsWith(storagePrefix+slug+':')||(slug==='mac-dinh'&&/^luckydraw:request:v2:[a-f0-9]{64}$/.test(key)))}catch{return false}}
-async function getRequestKey(slug,name,phone){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([name.trim(),normalizePhone(phone)])));return storagePrefix+slug+':'+Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('')}
+async function getRequestKey(slug,name,phone){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([name.trim(),legacyPhoneKey(phone)])));return storagePrefix+slug+':'+Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('')}
 function point(a,r){const rad=a*Math.PI/180;return [Number((250+Math.sin(rad)*r).toFixed(5)),Number((250-Math.cos(rad)*r).toFixed(5))]}
 export function Wheel({segments,rotation,busy}){
  const step=360/segments.length;
@@ -38,8 +39,8 @@ export default function Home({campaignSlug='mac-dinh',embedded=false,widgetToken
  function nextPlay(){if(!lastResult.current?.canContinue||lastResult.current.remainingPlays===0)return;const key=lastRequestKey.current;if(key){requests.current.delete(key);try{sessionStorage.removeItem(key)}catch{}}setHasRecovery(hasStoredRequest(campaignSlug));setResult(null);setPlayed(false);setError('');setCelebrate(false);clearTimeout(celebrationTimer.current)}
  function dismissResult(){setResult(null);setCelebrate(false);clearTimeout(celebrationTimer.current)}
  function reveal(d){setResult(d);setPlayed(true);setBusy(false);inFlight.current=false;if(d.prizeId&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){setCelebrate(true);clearTimeout(celebrationTimer.current);celebrationTimer.current=setTimeout(()=>setCelebrate(false),4500)}}
- async function spin(e){e.preventDefault();if(preview)return;if((!canPlay&&!hasRecovery)||inFlight.current||played)return;setError('');if(name.trim().length<2||!/^0[35789]\d{8}$/.test(normalizePhone(phone))||!consent){setError('Vui lòng nhập họ tên, số điện thoại hợp lệ và đồng ý thể lệ.');return;}inFlight.current=true;setBusy(true);
- try{let d;const key=await getRequestKey(campaignSlug,name,phone);lastRequestKey.current=key;let id=requests.current.get(key);try{id=id||sessionStorage.getItem(key);if(!id&&campaignSlug==='mac-dinh'){const oldKey=storagePrefix+key.split(':').at(-1);id=sessionStorage.getItem(oldKey);if(id){sessionStorage.setItem(key,id);sessionStorage.removeItem(oldKey)}}}catch{}if(!id&&!canPlay)throw Error('Không tìm thấy lượt quay trước đó trên phiên này.');if(!id){id=crypto.randomUUID();requests.current.set(key,id);try{sessionStorage.setItem(key,id)}catch{}setHasRecovery(true)}const r=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone,consent,requestId:id,widgetToken,deviceId:getDeviceId()})});d=await r.json();if(!r.ok)throw Error(d.error);lastResult.current=d;setCopied(false);
+ async function spin(e){e.preventDefault();if(preview)return;if((!canPlay&&!hasRecovery)||inFlight.current||played)return;setError('');if(name.trim().length<2||!normalizePhone(phone)||!consent){setError('Vui lòng nhập họ tên, số điện thoại hợp lệ và đồng ý thể lệ.');return;}inFlight.current=true;setBusy(true);
+ try{let d;const key=await getRequestKey(campaignSlug,name,phone);lastRequestKey.current=key;let id=requests.current.get(key);try{id=id||sessionStorage.getItem(key);if(!id&&campaignSlug==='mac-dinh'){const oldKey=storagePrefix+key.split(':').at(-1);id=sessionStorage.getItem(oldKey);if(id){sessionStorage.setItem(key,id);sessionStorage.removeItem(oldKey)}}}catch{}if(!id&&!canPlay)throw Error('Không tìm thấy lượt quay trước đó trên phiên này.');if(!id){id=crypto.randomUUID();requests.current.set(key,id);try{sessionStorage.setItem(key,id)}catch{}setHasRecovery(true)}const r=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,phone:normalizePhone(phone),consent,requestId:id,widgetToken,deviceId:getDeviceId()})});d=await r.json();if(!r.ok)throw Error(d.error);lastResult.current=d;setCopied(false);
  const i=segments.findIndex(p=>p.id===(d.prizeId||'none'));if(i<0){reveal(d);return;}const target=(360-(i+.5)*step)%360;setRotation(old=>old+1800+((target-old%360+360)%360));const duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?150:3900;timer.current=setTimeout(()=>reveal(d),duration);
  }catch(e){setError(e.message||'Có lỗi xảy ra.');setBusy(false);inFlight.current=false}}
  return <main className={'campaign'+(embedded?' campaign-embedded':'')}><header className="campaign-header"><a className="brand" href={embedded?undefined:'/c/'+campaignSlug}><span className="brand-mark"><Gift size={22} strokeWidth={1.8} aria-hidden="true"/></span><span>LUCKY<span className="brand-accent">DRAW</span><small>QUÀ VUI MỖI NGÀY</small></span></a><button className="rules-link" onClick={()=>setRules(true)}><Icon name="shield" size={18}/> Thể lệ <Icon name="external" size={15}/></button></header>
