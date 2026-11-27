@@ -14,4 +14,6 @@ assert.equal(signupOriginAllowed(request(internal,'null'),env),false);
 assert.equal(signupOriginAllowed(request('http://localhost:3199/api/auth/register','http://localhost:3199'),{}),true);
 assert.equal(signupOriginAllowed(request(internal,'http://'+new URL(publicOrigin).hostname),env),false);
 assert.equal(signupOriginAllowed(request('http://'+new URL(publicOrigin).hostname+'/api/auth/register',publicOrigin),env),true);
+assert.equal(signupOriginAllowed(request(internal,'https://lucky.codelocal.cloud',{'sec-fetch-site':'same-origin'}),{}),true);
+assert.equal(signupOriginAllowed(request(internal,'https://lucky.codelocal.cloud',{'sec-fetch-site':'cross-site'}),{}),false);
 console.log('PASS: Railway proxy, custom domain, loopback, cross-site and forged forwarded header rejection');
