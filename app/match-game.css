@@ -151,3 +151,4 @@
 .match-board.is-playing,.match-cell{touch-action:none;-webkit-tap-highlight-color:transparent}
 .match-board.is-demo .match-cell{touch-action:pan-y}
 .match-stats strong{font-variant-numeric:tabular-nums}
+.match-piece.tile-fall{animation-duration:90ms}.match-board.phase-fall .match-piece{transition:none}.match-board.phase-fall .match-piece.tile-fall{animation-timing-function:cubic-bezier(.18,.65,.42,1)}
