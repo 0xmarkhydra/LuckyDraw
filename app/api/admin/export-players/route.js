@@ -9,9 +9,9 @@ export async function GET(req){
  try{
   const user=await account(req);if(!user)return fail('Vui lòng đăng nhập.',401);
   const id=Number(new URL(req.url).searchParams.get('campaign'));if(!Number.isSafeInteger(id)||id<1)return fail('Chiến dịch không hợp lệ.',400);
-  const c=db(),owned=await c.from('settings').select('id,slug').eq('id',id).eq('owner_id',user.id).maybeSingle();
+  const c=db(),owned=await c.from('settings').select('id,slug,game_type').eq('id',id).eq('owner_id',user.id).maybeSingle();
   if(owned.error)throw Error();if(!owned.data)return fail('Không tìm thấy chiến dịch của bạn.',404);
-  const top=await c.from('plays').select('id').eq('campaign_id',id).order('id',{ascending:false}).limit(1).maybeSingle();
+  if(owned.data.game_type==='match3')return fail('Sử dụng bảng xếp hạng Candy Match.',400);const top=await c.from('plays').select('id').eq('campaign_id',id).order('id',{ascending:false}).limit(1).maybeSingle();
   if(top.error)throw Error();
   const {workbook,sheet}=playerWorkbook();let total=0,cursor=top.data?.id;
   if(cursor!=null){

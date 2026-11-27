@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createBoard,matches,possible,move,adjacent} from '../lib/match3.js';
+test('100 deterministic playable initial boards',()=>{for(let i=1;i<=100;i++){const a=createBoard(i);assert.equal(a.board.length,64);assert.equal(matches(a.board).size,0);assert(possible(a.board));assert.deepEqual(a,createBoard(i))}});
+test('valid swaps resolve cascades and score, board stays playable',()=>{let s=createBoard(921);for(let i=0;i<200;i++){const [a,b]=possible(s.board);const m=move(s.board,s.rng,a,b);assert(m.score>=30);assert.equal(matches(m.board).size,0);assert(possible(m.board));s=m}});
+test('reject invalid and diagonal moves without changing board',()=>{const s=createBoard(123);assert.equal(move(s.board,s.rng,7,8),null);assert.equal(move(s.board,s.rng,-1,0),null);assert.equal(adjacent(0,9),false);assert.equal(move(s.board,s.rng,0,0),null)});
