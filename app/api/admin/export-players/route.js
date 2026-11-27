@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import {db,account} from '../../../../lib/db';
-import {playerWorkbook,addPlayer,MAX_EXPORT_ROWS} from '../../../../lib/player-export';
+import {playerWorkbook,addPlayer,matchWorkbook,addMatchPlayer,MAX_EXPORT_ROWS} from '../../../../lib/player-export';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store, max-age=0','X-Content-Type-Options':'nosniff'};
@@ -11,7 +11,7 @@ export async function GET(req){
   const id=Number(new URL(req.url).searchParams.get('campaign'));if(!Number.isSafeInteger(id)||id<1)return fail('Chiến dịch không hợp lệ.',400);
   const c=db(),owned=await c.from('settings').select('id,slug,game_type').eq('id',id).eq('owner_id',user.id).maybeSingle();
   if(owned.error)throw Error();if(!owned.data)return fail('Không tìm thấy chiến dịch của bạn.',404);
-  if(owned.data.game_type==='match3')return fail('Sử dụng bảng xếp hạng Candy Match.',400);const top=await c.from('plays').select('id').eq('campaign_id',id).order('id',{ascending:false}).limit(1).maybeSingle();
+  if(owned.data.game_type==='match3'){const cutoff=new Date().toISOString();const {count,error}=await c.from('match_sessions').select('id',{head:true,count:'exact'}).eq('campaign_id',id).lte('expires_at',cutoff);if(error)throw Error();if(count>MAX_EXPORT_ROWS)return fail('Chiến dịch vượt giới hạn xuất 50.000 lượt mỗi tệp.',413);const {workbook,sheet}=matchWorkbook();for(let offset=0;offset<count;offset+=500){if(req.signal.aborted)throw Error('ABORTED');const {data,error}=await c.rpc('match_report',{p_campaign:id,p_cutoff:cutoff,p_limit:500,p_offset:offset});if(error)throw Error();for(const row of data)addMatchPlayer(sheet,row)}const buffer=await workbook.xlsx.writeBuffer();return new Response(new Uint8Array(buffer),{headers:{...headers,'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','Content-Disposition':'attachment; filename="luckydraw-match-'+owned.data.slug+'.xlsx"'}});}const top=await c.from('plays').select('id').eq('campaign_id',id).order('id',{ascending:false}).limit(1).maybeSingle();
   if(top.error)throw Error();
   const {workbook,sheet}=playerWorkbook();let total=0,cursor=top.data?.id;
   if(cursor!=null){
