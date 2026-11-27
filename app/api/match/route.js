@@ -28,7 +28,18 @@ export async function POST(req){
  try{
  if(Number(req.headers.get('content-length')||0)>4096)return fail('Yêu cầu quá lớn.');const raw=await req.text();if(raw.length>4096)return fail('Yêu cầu quá lớn.');let b;try{b=JSON.parse(raw)}catch{return fail('Yêu cầu không hợp lệ.')}
  if(!b||!validSlug(b.slug)||typeof b.id!=='string'||!devicePattern.test(b.id))return fail('Phiên không hợp lệ.');
- const c=db(),{data:cfg,error}=await config(c,b.slug);if(error)throw Error();if(!cfg)return fail('Không tìm thấy game.',404);
+ const c=db();
+ if(b.action==='move'){
+  if(!Number.isInteger(b.seq)||!Number.isInteger(b.a)||!Number.isInteger(b.b))return fail('Yêu cầu không hợp lệ.');
+  const {data:s,error}=await c.from('match_sessions').select('id,campaign_id,board,score,seq,expires_at,settings!match_sessions_campaign_id_fkey!inner(slug,game_type)').eq('id',b.id).eq('settings.slug',b.slug).eq('settings.game_type','match3').maybeSingle();if(error)throw Error();if(!s)return fail('Không tìm thấy phiên chơi.',404);
+  if(Date.parse(s.expires_at)<=Date.now())return fail(messages.MATCH_ENDED,409);
+  if(s.seq!==b.seq)return json({...publicSession(s),conflict:true},409);
+  const result=move(s.board,randomBytes(4).readUInt32LE(),b.a,b.b);if(!result)return json({...publicSession(s),invalid:true});
+  const {data,error:moveError}=await c.rpc('match_move',{p_id:s.id,p_campaign:s.campaign_id,p_seq:s.seq,p_board:result.board,p_rng:result.rng,p_delta:result.score});
+  if(moveError)return fail(messages[moveError.message]||'Không lưu được lượt ghép.',409);
+  return json({...publicSession(data),combo:result.combo,delta:result.score,stages:result.stages,cooldownMs:Math.max(0,200-(Date.now()-Date.parse(data.score_at)))});
+ }
+ const {data:cfg,error}=await config(c,b.slug);if(error)throw Error();if(!cfg)return fail('Không tìm thấy game.',404);
  if(b.action==='start'){
   const phone=normalizePhone(b.phone);if(!phone||b.consent!==true)return fail('Nhập số điện thoại hợp lệ và đồng ý thể lệ.');
   const widget=b.widgetToken?verifyWidgetToken(b.widgetToken,b.slug):null;if(b.widgetToken&&!widget)return fail('Phiên widget hết hạn.',403);
@@ -46,13 +57,6 @@ export async function POST(req){
   }
   const {data:award,error:awardError}=await c.from('match_awards').select('reward,delivered_at').eq('campaign_id',cfg.id).eq('session_id',s.id).maybeSingle();if(awardError)throw Error();return json({...publicSession(s),rank,finalized:!!cfg.match_finalized_at,reward:award?.reward||null,delivered:!!award?.delivered_at});
  }
- if(b.action!=='move'||!Number.isInteger(b.seq))return fail('Yêu cầu không hợp lệ.');
- if(Date.parse(s.expires_at)<=Date.now())return fail(messages.MATCH_ENDED,409);
- if(s.seq!==b.seq)return json({...publicSession(s),conflict:true},409);
- // Fresh server-only randomness for each move: exposing past animation frames does not expose future refills.
- const result=move(s.board,randomBytes(4).readUInt32LE(),b.a,b.b);if(!result)return json({...publicSession(s),invalid:true});
- const {data,error:moveError}=await c.rpc('match_move',{p_id:s.id,p_campaign:cfg.id,p_seq:s.seq,p_board:result.board,p_rng:result.rng,p_delta:result.score});
- if(moveError)return fail(messages[moveError.message]||'Không lưu được lượt ghép.',409);
- return json({...publicSession(data),combo:result.combo,delta:result.score,stages:result.stages});
+ return fail('Yêu cầu không hợp lệ.');
  }catch{return fail('Hệ thống chưa sẵn sàng.',503)}
 }

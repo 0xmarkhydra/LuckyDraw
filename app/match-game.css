@@ -137,3 +137,17 @@
  .campaign.match-game.is-entry .stage-heading p{display:none}
  .campaign.match-game.is-playing .match-game-frame{width:min(100%,max(240px,calc(100svh - 145px)),430px)}
 }
+/* Fast gameplay: transform/opacity only on active pieces, no per-tile filters. */
+.match-board{contain:layout paint;isolation:isolate}
+.match-piece{transition:transform 75ms cubic-bezier(.2,.75,.4,1)}
+.match-piece.tile-pop{animation-duration:75ms}
+.match-piece.tile-fall{animation-duration:105ms}
+.match-sparks i{animation-duration:120ms;box-shadow:none}
+.candy-art,.candy-body svg{filter:none}
+.match-cell.selected .candy-art{filter:none}
+.match-cell.selected .candy-body{outline:1px solid #ffe6ac;outline-offset:1px}
+.match-cell.hint .match-piece{filter:none}
+.match-board.phase-invalid .match-piece{transition-duration:75ms}
+.match-board.is-playing,.match-cell{touch-action:none;-webkit-tap-highlight-color:transparent}
+.match-board.is-demo .match-cell{touch-action:pan-y}
+.match-stats strong{font-variant-numeric:tabular-nums}
