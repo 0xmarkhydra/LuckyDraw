@@ -48,9 +48,10 @@ export async function POST(req){
  if(b.action!=='move'||!Number.isInteger(b.seq))return fail('Yêu cầu không hợp lệ.');
  if(Date.parse(s.expires_at)<=Date.now())return fail(messages.MATCH_ENDED,409);
  if(s.seq!==b.seq)return json({...publicSession(s),conflict:true},409);
- const result=move(s.board,Number(s.rng),b.a,b.b);if(!result)return json({...publicSession(s),invalid:true});
+ // Fresh server-only randomness for each move: exposing past animation frames does not expose future refills.
+ const result=move(s.board,randomBytes(4).readUInt32LE(),b.a,b.b);if(!result)return json({...publicSession(s),invalid:true});
  const {data,error:moveError}=await c.rpc('match_move',{p_id:s.id,p_campaign:cfg.id,p_seq:s.seq,p_board:result.board,p_rng:result.rng,p_delta:result.score});
  if(moveError)return fail(messages[moveError.message]||'Không lưu được lượt ghép.',409);
- return json({...publicSession(data),combo:result.combo,delta:result.score});
+ return json({...publicSession(data),combo:result.combo,delta:result.score,stages:result.stages});
  }catch{return fail('Hệ thống chưa sẵn sàng.',503)}
 }
