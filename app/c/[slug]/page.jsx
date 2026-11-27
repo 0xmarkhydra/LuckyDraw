@@ -7,7 +7,7 @@ import {siteOrigin,campaignSeo} from '../../../lib/campaign-seo';
 export const dynamic='force-dynamic';
 const getCampaign=cache(async slug=>{
  if(!/^[a-z0-9][a-z0-9-]{0,78}[a-z0-9]$/.test(slug))return null;
- const c=db(),{data,error}=await c.from('settings').select('id,slug,title,description,active,starts_at,ends_at,max_plays_per_phone,play_period,max_wins_per_phone,max_total_plays,game_type,match_seconds').eq('slug',slug).maybeSingle();
+ const c=db(),{data,error}=await c.from('settings').select('id,slug,title,description,active,starts_at,ends_at,max_plays_per_phone,play_period,max_wins_per_phone,max_total_plays,game_type,match_seconds,match_finalized_at').eq('slug',slug).maybeSingle();
  if(error)throw Error('Không tải được chiến dịch');
  if(!data)return null;
  return data;

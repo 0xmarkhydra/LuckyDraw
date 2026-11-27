@@ -1,3 +1,4 @@
+import {matchAvailability} from '../../../lib/match-lifecycle';
 import {NextResponse} from 'next/server';
 import {randomBytes} from 'node:crypto';
 import {db,account,normalizePhone} from '../../../lib/db';
@@ -19,7 +20,7 @@ export async function GET(req){
  if(admin){const user=await account(req);if(!user)return fail('Vui lòng đăng nhập.',401);const owned=await c.from('settings').select('id').eq('id',cfg.id).eq('owner_id',user.id).maybeSingle();if(owned.error)throw Error();if(!owned.data)return fail('Không tìm thấy chiến dịch.',404);page=Math.max(0,Math.min(100000,Math.floor(Number(u.searchParams.get('page'))||0)));}
  const cutoff=new Date().toISOString();const {data:rows,error:rankError}=await c.rpc('match_report',{p_campaign:cfg.id,p_cutoff:cutoff,p_limit:admin?50:20,p_offset:page*50});if(rankError)throw Error();
  const {count,error:countError}=await c.from('match_sessions').select('id',{count:'exact',head:true}).eq('campaign_id',cfg.id).lte('expires_at',cutoff);if(countError)throw Error();
- const {id,match_rewards,max_total_plays,...settings}=cfg;const now=Date.now();settings.active=cfg.active&&(!cfg.starts_at||Date.parse(cfg.starts_at)<=now)&&(!cfg.ends_at||Date.parse(cfg.ends_at)>=now+cfg.match_seconds*1000);settings.rewardTiers=match_rewards.map(({from,to,name})=>({from,to,name}));
+ const {id,match_rewards,max_total_plays,...settings}=cfg;settings.published=cfg.active;settings.availability=matchAvailability(cfg);settings.active=settings.availability==='open';settings.rewardTiers=match_rewards.map(({from,to,name})=>({from,to,name}));
  return json({settings,total:count,rows:rows.map(r=>({rank:r.rank,phone:admin?r.phone:mask(r.phone),score:r.score,scoreAt:r.score_at,reward:r.reward,...(admin?{code:r.code,deliveredAt:r.delivered_at,origin:r.origin}: {})}))});
  }catch{return fail('Không tải được bảng xếp hạng.',503)}
 }
