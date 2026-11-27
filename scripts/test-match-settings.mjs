@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {matchPatch,matchEdit,rebaseMatchDraft} from '../lib/match-settings.js';
+const cfg={title:'Old',description:'',starts_at:null,ends_at:null,match_seconds:90,active:false,revision:1};
+test('stale info changes and rule edits merge independently',()=>{const p=matchPatch({...cfg,title:'New',revision:2},'rules',{match_seconds:90},{match_seconds:120});assert.equal(p.values.title,'New');assert.equal(p.values.match_seconds,120);assert.equal(p.changed,true)});
+test('concurrent edit of same field conflicts',()=>assert.equal(matchPatch({...cfg,match_seconds:60},'rules',{match_seconds:90},{match_seconds:120}).error,'STALE_CONFIG'));
+test('retry of already applied choice is idempotent',()=>assert.equal(matchPatch({...cfg,match_seconds:120},'rules',{match_seconds:90},{match_seconds:120}).changed,false));
+test('unchanged fields never overwrite concurrent updates',()=>{const e=matchEdit('info',cfg,{...cfg,title:'New'});const p=matchPatch({...cfg,description:'Other edit'},e.scope,e.base,e.changes);assert.equal(p.values.description,'Other edit');assert.equal(p.values.title,'New')});
+test('publish does not overwrite game duration',()=>{const p=matchPatch({...cfg,match_seconds:120},'publish',{active:false},{active:true});assert.equal(p.values.match_seconds,120);assert.equal(p.values.active,true)});
+test('reject fields outside scope',()=>assert.equal(matchPatch(cfg,'rules',{match_seconds:90},{match_seconds:120,active:true}).error,'INVALID_SETTINGS'));
+test('rebase keeps unsaved duration while taking new metadata',()=>assert.deepEqual(rebaseMatchDraft(cfg,{...cfg,match_seconds:120},{...cfg,title:'New',revision:2}),{...cfg,title:'New',revision:2,match_seconds:120}));

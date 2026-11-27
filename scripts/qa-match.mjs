@@ -13,7 +13,15 @@ try{
  cid=ok(await admin(a,{action:'create_campaign',title:'QA Candy Match',slug,gameType:'match3'})).campaignId;
  let cfg=await config(a);assert.equal(cfg.game_type,'match3');
  ok(await admin(a,{action:'match_rewards',revision:cfg.revision,rewards:[{from:1,to:1,name:'QA voucher',codes:['QA-PRIVATE-'+tag]}]}));
- cfg=await config(a);ok(await admin(a,{action:'match_settings',...cfg,match_seconds:60,active:true}));
+ cfg=await config(a);
+ const original={...cfg};const info={title:cfg.title,description:cfg.description,starts_at:cfg.starts_at,ends_at:cfg.ends_at};
+ ok(await admin(a,{action:'match_patch',scope:'info',base:info,changes:{...info,title:'QA Match updated'}}));
+ ok(await admin(a,{action:'match_patch',scope:'rules',base:{match_seconds:original.match_seconds},changes:{match_seconds:120}}));
+ cfg=await config(a);assert.equal(cfg.title,'QA Match updated');assert.equal(cfg.match_seconds,120);
+ const conflict=await admin(a,{action:'match_patch',scope:'rules',base:{match_seconds:original.match_seconds},changes:{match_seconds:60}});assert.equal(conflict.status,409);assert.equal(conflict.data.code,'STALE_CONFIG');
+ const replay=ok(await admin(a,{action:'match_patch',scope:'rules',base:{match_seconds:original.match_seconds},changes:{match_seconds:120}}));assert.equal(replay.ok,true);
+ ok(await admin(a,{action:'match_patch',scope:'rules',base:{match_seconds:120},changes:{match_seconds:60}}));
+ cfg=await config(a);ok(await admin(a,{action:'match_patch',scope:'publish',base:{active:false},changes:{active:true}}));
  assert.equal((await req('/api/match?campaign='+slug+'&admin=1',undefined,b)).status,404);
  assert.equal((await admin(b,{action:'match_finalize',revision:cfg.revision})).status,404);
  let publicData=ok(await req('/api/match?campaign='+slug));assert(!JSON.stringify(publicData).includes('QA-PRIVATE'));assert.equal(publicData.settings.rewardTiers[0].name,'QA voucher');

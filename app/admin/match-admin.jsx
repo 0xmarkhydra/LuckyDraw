@@ -1,6 +1,7 @@
 'use client';
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {ArrowLeft,ArrowUpRight,Gamepad2,Settings2,Trophy,Eye,Code2,RefreshCw,Save,LogOut,Clock3,UsersRound,CheckCircle2,Gift,Plus,Trash2,LockKeyhole,Menu,ChevronRight,ChevronLeft,ArrowRight,LayoutDashboard,CalendarDays,AlertCircle,X,Send} from 'lucide-react';
+import {matchEdit,rebaseMatchDraft} from '../../lib/match-settings';
 import WorkspaceSidebar from './workspace-sidebar';
 import PlayerExport from './player-export';
 import MatchGame from '../match-game';
@@ -13,7 +14,8 @@ const labels={overview:['Tổng quan','Theo dõi và quản lý chiến dịch']
 function Heading({title,desc,action}){return <div className="aw-section-head"><div><h2>{title}</h2>{desc&&<p>{desc}</p>}</div>{action}</div>}
 export default function MatchAdmin({data,token,busy,message,onBack,onSignOut,onSave,initialWizard=false,renderWidget}){
  const cfg=data.settings,[form,setForm]=useState(cfg),[tab,setTab]=useState(initialWizard?'info':'overview'),[wizard,setWizard]=useState(initialWizard?0:null),[drawer,setDrawer]=useState(false),[rows,setRows]=useState([]),[total,setTotal]=useState(0),[page,setPage]=useState(0),[loading,setLoading]=useState(false),[error,setError]=useState(''),[rewardDirty,setRewardDirty]=useState(false);
- useEffect(()=>setForm(cfg),[cfg.revision]);
+ const baseline=useRef(cfg);
+ useEffect(()=>{const previous=baseline.current;baseline.current=cfg;setForm(draft=>rebaseMatchDraft(previous,draft,cfg))},[cfg.revision]);
  const finalized=!!cfg.match_finalized_at;
  const dirty=['title','description','match_seconds','starts_at','ends_at'].some(k=>form[k]!==cfg[k]);
  useEffect(()=>{if(!dirty&&!rewardDirty)return;const guard=e=>{e.preventDefault();e.returnValue=''};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard)},[dirty,rewardDirty]);
@@ -25,7 +27,7 @@ export default function MatchAdmin({data,token,busy,message,onBack,onSignOut,onS
  function finish(){try{localStorage.removeItem('luckydraw:match-wizard:'+cfg.id)}catch{}setWizard(null);setTab('overview')}
  async function load(p=page){setLoading(true);setError('');try{const r=await fetch('/api/match?campaign='+encodeURIComponent(cfg.slug)+'&admin=1&page='+p,{headers:{Authorization:'Bearer '+token},cache:'no-store'});const d=await r.json();if(!r.ok)throw Error(d.error);setRows(d.rows);setTotal(d.total);setPage(p)}catch(e){setError(e.message)}finally{setLoading(false)}}
  useEffect(()=>{if(tab==='players'||tab==='overview')void load(0)},[tab,cfg.id]);
- function save(active=cfg.active,after){onSave({action:'match_settings',revision:cfg.revision,title:form.title,description:form.description,match_seconds:form.match_seconds,active,starts_at:form.starts_at,ends_at:form.ends_at},after)}
+ function save(active=cfg.active,after){const scope=tab==='rules'?'rules':tab==='info'?'info':'publish';onSave(matchEdit(scope,baseline.current,{...form,active}),after)}
  const status=finalized?'Đã chốt kết quả':cfg.ends_at&&Date.parse(cfg.ends_at)<=Date.now()?'Đã kết thúc':!cfg.active?'Chưa công bố':cfg.starts_at&&Date.parse(cfg.starts_at)>Date.now()?'Đã lên lịch':'Đang chạy';
  return <div className={'aw-shell'+(wizard!==null?' aw-focus-mode':'')}><WorkspaceSidebar data={data} campaign={cfg.id} tab={tab} drawer={drawer} busy={busy} onClose={()=>setDrawer(false)} onNavigate={navigate} onSignOut={()=>{if(discard())onSignOut()}}/>{drawer&&<button className="aw-backdrop" onClick={()=>setDrawer(false)} aria-label="Đóng điều hướng"/>}<main className="aw-main"><header className="aw-topbar"><div className="aw-breadcrumb"><button className="aw-icon aw-menu" aria-label="Mở điều hướng" onClick={()=>setDrawer(true)} disabled={wizard!==null}><Menu size={22}/></button>{wizard===null?<><button type="button" className="aw-breadcrumb-back" disabled={busy} onClick={()=>navigate('campaigns')}>Chiến dịch</button><ChevronRight size={15}/><span>{cfg.title}</span></>:<span>Tạo chiến dịch</span>}<ChevronRight size={15}/><strong>{wizard!==null?steps[wizard][2]:labels[tab][0]}</strong></div><div className="aw-top-actions"><a className="aw-secondary-link" href={'/c/'+cfg.slug} target="_blank" rel="noreferrer"><span>Xem minigame</span><ArrowUpRight size={17}/></a><span className="aw-profile" title="Tài khoản của bạn"><UsersRound size={18}/></span></div></header><div className="aw-content">
  {wizard===null?<div className="aw-page-head"><div><h1>{labels[tab][0]}</h1><p>{labels[tab][1]}</p></div><span className={'aw-pill '+(status==='Đang chạy'?'is-live':'is-off')}><i/>{status}</span></div>:<section className="aw-panel aw-wizard"><div className="aw-wizard-head"><div><small>CANDY MATCH · {cfg.title}</small><strong>Bước {wizard+1} / 6</strong></div><button className="secondary" disabled={busy} onClick={leave}>Thoát · giữ bản nháp</button></div><div className="aw-stepper">{steps.map((step,i)=><button key={step[0]} disabled={busy||i>wizard} aria-current={i===wizard?'step':undefined} className={'aw-step '+(wizard===i?'current':i<wizard?'done':'')} onClick={()=>{if(i!==wizard&&discard())go(i)}}><span>{i<wizard?<CheckCircle2 size={17}/>:i+1}</span><strong>{step[1]}</strong></button>)}</div><div className="aw-step-progress"><i style={{width:(wizard+1)/6*100+'%'}}/></div><div className="aw-step-title"><h1>{steps[wizard][2]}</h1><p>{steps[wizard][3]}</p></div></section>}

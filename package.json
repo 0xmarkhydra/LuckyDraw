@@ -13,7 +13,8 @@
     "prebuild": "npm run icons:check",
     "test:signup-origin": "node scripts/test-signup-origin.mjs",
     "test:odds": "node --test scripts/test-odds.mjs",
-    "test:match3": "node --test scripts/test-match3.mjs"
+    "test:match3": "node --test scripts/test-match3.mjs",
+    "test:match-settings": "node --test scripts/test-match-settings.mjs"
   },
   "keywords": [],
   "author": "",
